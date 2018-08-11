@@ -15,7 +15,7 @@ var scrapper = function(ticker){
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
     // var urls = ['ITSA4'];
     var urls = [ticker];
-    data = []
+    // data = []
     var total = urls.length;
     for (var i = urls.length - 1; i >= 0; i--) {
         scrape(urls[i]).then(
