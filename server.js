@@ -46,10 +46,10 @@ app.get('/raspagem', function(req, res) {
 app.get('/recebe', function(req, res) {
     // scrapper();
     // texto = "realizando";
-    if(data){
+    if(data.length != 0){
         res.json(data);
     } else {
-        res.json([{status: 300}]);    
+        res.json([{'status': 300}]);    
     }
 })
 
