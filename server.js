@@ -67,7 +67,7 @@ const scrapper_acoes = require('./scrape_acoes.js');
 
 app.get('/infomoney/acoes', function(req,res){
     if (data_acoes.length != 0){
-        res.json(data_fii);
+        res.json(data_acoes);
     } else {
 
         scrapper_acoes().then(
