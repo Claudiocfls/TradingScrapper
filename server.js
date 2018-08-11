@@ -64,6 +64,26 @@ var scrapper = function(ticker){
 // })
 
 const scrapper_acoes = require('./scrappers/scrapper_acoes.js');
+
+var ToFloat = function(value){
+    var valor = value.replace(',','.');
+    return parseFloat(valor);
+};
+
+var updateOrCreateDB = function(data, source){
+    for (var i = data.length - 1; i >= 0; i--) {
+        var nome = data[i].ticker;
+        var valor = ToFloat(data[i].price);
+        if (!thereIsRegister(nome)){
+            createRegister(nome, valor, source );
+        } else {
+            updateRegister(nome, valor, source);
+        }
+    }
+}
+
+
+
 var updateFII = function(){
     fii_is_running = true;
     scrapper_fii().then(
@@ -71,6 +91,7 @@ var updateFII = function(){
                 // res.json(value);
                 data_fii = value;
                 fii_is_running = false;
+                updateOrCreateDB(data_fii, "scrapper2");
             }
     ).catch(
     function(error){
@@ -85,14 +106,13 @@ var updateACOES = function(){
                 // res.json(value);
                 data_acoes = value;
                 acoes_is_running = false;
-
+                updateOrCreateDB(data_acoes, "scrapper1");
             }
     ).catch(
     function(error){
         console.log(error);
     });           
 }
-
 
 var updateRegister = function(tickerparam, newprice){
   models.Ativos.update(
@@ -157,13 +177,13 @@ app.get('/infomoney/fii', function(req,res){
 
 app.get('/verifica', function(req, res) {
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    var entrada = {body:{ticker:'ITSA4'}};
+    var entrada = {body:{ticker:'MGLU3'}};
     // ativos.create(req,res);
-    if (!thereIsRegister('ITSA4')){
+    if (!thereIsRegister('MGLU3')){
         console.log("criar");
-        createRegister('ITSA4',11.00,'scrapper1');
+        createRegister('MGLU3',11.00,'scrapper1');
     }else{
-        updateRegister('ITSA4',123.00);
+        updateRegister('MGLU3',123.00);
         console.log("atualizar");
     }
     res.send("abriu");
