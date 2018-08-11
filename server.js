@@ -140,9 +140,10 @@ var createRegister = function(tickerparam, priceparam, sourceparam){
 };
 
 var thereIsRegister = function(ticker){
-    return models.Ativos.count({ where: { ticker: ticker } })
+    models.Ativos.count({ where: { ticker: ticker } })
       .then(count => {
         if (count == 0) {
+          console.log("ha "+count);
           return false;
         }
         return true;
