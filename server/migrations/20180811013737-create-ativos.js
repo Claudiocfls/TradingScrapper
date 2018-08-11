@@ -14,8 +14,8 @@ module.exports = {
       price: {
         type: Sequelize.FLOAT
       },
-      ultima_atualizacao: {
-        type: Sequelize.DATE
+      source: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

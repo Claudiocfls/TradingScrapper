@@ -6,7 +6,7 @@ var express = require('express'),
 
 const PORT = process.env.PORT || 5000
 
-var scrape = require('./scrape.js');
+var scrape = require('./scrappers/scrapper_general.js');
 
 var texto = "";
 var data = [];
@@ -66,7 +66,7 @@ var scrapper = function(ticker){
 //     res.redirect('/');
 // })
 
-const scrapper_acoes = require('./scrape_acoes.js');
+const scrapper_acoes = require('./scrappers/scrapper_acoes.js');
 var updateFII = function(){
     fii_is_running = true;
     scrapper_fii().then(
@@ -108,7 +108,7 @@ app.get('/infomoney/acoes', function(req,res){
 })
 
 
-const scrapper_fii = require('./scrape_fii.js');
+const scrapper_fii = require('./scrappers/scrapper_fii.js');
 
 app.get('/infomoney/fii', function(req,res){
     if (data_fii.length != 0){
@@ -121,35 +121,36 @@ app.get('/infomoney/fii', function(req,res){
     }
 })
 
-// app.get('/verifica', function(req, res) {
-//     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-//     var entrada = {body:{ticker:'ITSA4'}};
-//     // ativos.create(req,res);
-//     models.Ativos.create({
-//         ticker: 'ITSA4',
-//         price: 12.01
-//       }).then(function(user) {
-//         res.send("abriu");
-//       });
-//     // res.send("abriu");
+app.get('/verifica', function(req, res) {
+    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
+    var entrada = {body:{ticker:'ITSA4'}};
+    // ativos.create(req,res);
+    models.Ativos.create({
+        ticker: 'ITSA4',
+        price: 12.01,
+        source: 'scrapper1'
+      }).then(function(user) {
+        res.send("abriu");
+      });
+    // res.send("abriu");
     
-// })
+})
 
-// app.get('/verifica2', function(req, res) {
-//     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-//     // var entrada = {body:{ticker:'ITSA4'}};
-//     // // ativos.create(req,res);
-//     // models.Ativos.create({
-//     //     sticker: 'ITSA4',
-//     //     price: 12.01
-//     //   }).then(function(user) {
-//     //     res.send("abriu");
-//     //   });
-//       models.Ativos.findAll({}).then(function(todos) {
-//         res.json(todos);
-//     });
-//     // res.send("abriu");
-// })
+app.get('/verifica2', function(req, res) {
+    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
+    // var entrada = {body:{ticker:'ITSA4'}};
+    // // ativos.create(req,res);
+    // models.Ativos.create({
+    //     sticker: 'ITSA4',
+    //     price: 12.01
+    //   }).then(function(user) {
+    //     res.send("abriu");
+    //   });
+      models.Ativos.findAll({}).then(function(todos) {
+        res.json(todos);
+    });
+    // res.send("abriu");
+})
 
 // var teste = function() {
 //     setTimeout(function(){
