@@ -49,7 +49,7 @@ app.get('/recebe', function(req, res) {
     if(data){
         res.json(data);
     } else {
-        res.send('resultado ainda não encontrado');    
+        res.json({status: 300});    
     }
 })
 
@@ -99,7 +99,7 @@ app.get('/envia', function(req, res) {
     // var urls = [req.query.ticker];
     // // console.log(req.query.ticker);
     // var total = urls.length;
-    // var data = [];
+    var data = [];
     // for (var i = urls.length - 1; i >= 0; i--) {
     //     scrape(urls[i]).then(
     //         (value) => {

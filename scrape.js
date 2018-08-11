@@ -20,7 +20,8 @@ module.exports = async (ticker) => {
             let ticker = nome.innerText;
             // let price = element.childNodes[7].children[0].innerText; // Select the price
             // let ticker2 = ticker.slice(0);
-            data.push({ticker, price}); // Push an object with the data onto our array
+            let status = 200;
+            data.push({status, ticker, price}); // Push an object with the data onto our array
         // }
 
         return data; // Return our data array
