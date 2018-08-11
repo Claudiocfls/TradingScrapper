@@ -25,7 +25,10 @@ var scrapper = function(){
                     texto = "acabou";
                 }
             }
-        );
+        ).catch(
+        function(error){
+            console.log(error);
+        });
     }
 };
 
