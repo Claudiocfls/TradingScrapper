@@ -163,7 +163,7 @@ app.get('/verifica', function(req, res) {
         console.log("criar");
         createRegister('ITSA4',11.00,'scrapper1');
     }else{
-        updateRegister('ITSA4',12.00);
+        updateRegister('ITSA4',123.00);
         console.log("atualizar");
     }
     res.send("abriu");
