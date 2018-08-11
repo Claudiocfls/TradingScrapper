@@ -18,10 +18,7 @@ var acoes_is_running = false;
 var fii_is_running = false;
 
 var scrapper = function(ticker){
-    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    // var urls = ['ITSA4'];
     var urls = [ticker];
-    // data = []
     var total = urls.length;
     for (var i = urls.length - 1; i >= 0; i--) {
         scrape(urls[i]).then(
@@ -88,13 +85,48 @@ var updateACOES = function(){
                 // res.json(value);
                 data_acoes = value;
                 acoes_is_running = false;
+
             }
     ).catch(
     function(error){
         console.log(error);
-    });
-            
+    });           
 }
+
+
+var updateRegister = function(tickerparam, newprice){
+  models.Ativos.find({ where: { ticker: tickerparam } })
+  .on('success', function (project) {
+    // Check if record exists in db
+    if (project) {
+      project.updateAttributes({
+        price: newprice
+      })
+      .success(function () {})
+    }
+  })
+};
+
+var createRegister = function(tickerparam, priceparam, sourceparam){
+    models.Ativos.create({
+        ticker: tickerparam,
+        price: priceparam,
+        source: sourceparam
+      }).then(function(user) {
+        // res.send("abriu");
+      });
+};
+
+var thereIsRegister = function(ticker){
+    return db.Profile.count({ where: { ticker: ticker } })
+      .then(count => {
+        if (count == 0) {
+          return false;
+        }
+        return true;
+    });
+};
+
 
 app.get('/infomoney/acoes', function(req,res){
     if (data_acoes.length != 0){
@@ -125,14 +157,12 @@ app.get('/verifica', function(req, res) {
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
     var entrada = {body:{ticker:'ITSA4'}};
     // ativos.create(req,res);
-    models.Ativos.create({
-        ticker: 'ITSA4',
-        price: 12.01,
-        source: 'scrapper1'
-      }).then(function(user) {
-        res.send("abriu");
-      });
-    // res.send("abriu");
+    if (!thereIsRegister('ITSA4')){
+        createRegister('ITSA4',11.00,'scrapper1');
+    }else{
+        updateRegister('ITSA4',12.00);
+    }
+    res.send("abriu");
     
 })
 
