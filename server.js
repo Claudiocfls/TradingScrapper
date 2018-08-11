@@ -29,6 +29,7 @@ var scrapper = function(){
     }
 };
 
+
 // Escolhendo no metodo .get() o caminho para fazer a requisição
 // Poderia ser somente a barra, mas para facilitar a compreensão vamos personalizar
 app.get('/raspagem', function(req, res) {
