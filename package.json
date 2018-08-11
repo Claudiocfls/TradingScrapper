@@ -1,0 +1,17 @@
+{
+    "name": "node-scrapper-tradingview",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/claudiocfls/tradingscrapper"
+    },
+    "version": "0.0.1",
+    "description": "Raspagem de dados para API",
+    "main": "server.js",
+    "author": "Claudio Silva ",
+    "license": "MIT",
+    "dependencies": {
+        "express": "latest",
+        "puppeteer": "^1.7.0",
+        "request": "latest"
+    }
+}
