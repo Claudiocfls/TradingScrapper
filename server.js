@@ -11,9 +11,10 @@ var scrape = require('./scrape.js');
 var texto = "";
 var data = [];
 
-var scrapper = function(){
+var scrapper = function(ticker){
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    var urls = ['ITSA4'];
+    // var urls = ['ITSA4'];
+    var urls = [ticker];
     data = []
     var total = urls.length;
     for (var i = urls.length - 1; i >= 0; i--) {
@@ -96,24 +97,26 @@ app.get('/verifica2', function(req, res) {
 
 app.get('/', function(req, res) {
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    var urls = [req.query.ticker];
-    // console.log(req.query.ticker);
-    var total = urls.length;
-    var data = [];
-    for (var i = urls.length - 1; i >= 0; i--) {
-        scrape(urls[i]).then(
-            (value) => {
-                data.push(value[0]);
-                total = total - 1;
-                if(total == 0){
-                    res.json(data);
-                }
-            }
-        );
-    }
+    // var urls = [req.query.ticker];
+    // // console.log(req.query.ticker);
+    // var total = urls.length;
+    // var data = [];
+    // for (var i = urls.length - 1; i >= 0; i--) {
+    //     scrape(urls[i]).then(
+    //         (value) => {
+    //             data.push(value[0]);
+    //             total = total - 1;
+    //             if(total == 0){
+    //                 res.json(data);
+    //             }
+    //         }
+    //     );
+    // }
+
+    scrapper(req.query.ticker);
 
     // teste();
-    // res.send("acabou aqui");
+    res.send("acabou aqui");
     
 })
 
