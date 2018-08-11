@@ -60,7 +60,31 @@ app.get('/apaga', function(req, res) {
     res.redirect('/');
 })
 
+const scrapper_acoes = require('./scrape_acoes.js');
 
+app.get('/infomoney/acoes', function(req,res){
+    scrapper_acoes().then(
+            (value) => {
+                res.json(value);
+            }
+    ).catch(
+    function(error){
+        console.log(error);
+    });
+})
+
+const scrapper_fii = require('./scrape_fii.js');
+
+app.get('/infomoney/fii', function(req,res){
+    scrapper_fii().then(
+            (value) => {
+                res.json(value);
+            }
+    ).catch(
+    function(error){
+        console.log(error);
+    });
+})
 
 app.get('/verifica', function(req, res) {
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
@@ -148,9 +172,6 @@ app.get('/', function(req, res) {
     res.send("<p> /envia/?ticker=bova11 </p><p> /recebe </p>");
     
 })
-
-
-
 
 
 // Execução do serviço
