@@ -53,7 +53,12 @@ app.get('/recebe', function(req, res) {
     }
 })
 
-
+app.get('/apaga', function(req, res) {
+    // scrapper();
+    // texto = "realizando";
+    data = [];
+    res.redirect('/');
+})
 
 
 

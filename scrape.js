@@ -6,6 +6,7 @@ module.exports = async (ticker) => {
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
+
     // const tickerName = ticker;
     await page.goto('https://br.tradingview.com/symbols/BMFBOVESPA-'+ticker+'/');
     console.log('https://br.tradingview.com/symbols/BMFBOVESPA-'+ticker+'/');
