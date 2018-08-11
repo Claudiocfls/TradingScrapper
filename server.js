@@ -11,6 +11,9 @@ var scrape = require('./scrape.js');
 var texto = "";
 var data = [];
 
+var data_fii = [];
+var data_acoes = [];
+
 var scrapper = function(ticker){
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
     // var urls = ['ITSA4'];
@@ -63,27 +66,41 @@ app.get('/apaga', function(req, res) {
 const scrapper_acoes = require('./scrape_acoes.js');
 
 app.get('/infomoney/acoes', function(req,res){
-    scrapper_acoes().then(
-            (value) => {
-                res.json(value);
-            }
-    ).catch(
-    function(error){
-        console.log(error);
-    });
+    if (data_acoes.length != 0){
+        res.json(data_fii);
+    } else {
+
+        scrapper_acoes().then(
+                (value) => {
+                    // res.json(value);
+                    data_acoes = value;
+                }
+        ).catch(
+        function(error){
+            console.log(error);
+        });
+        res.json([{status: "300", message: "obtendo dados"}]);
+    }
 })
 
 const scrapper_fii = require('./scrape_fii.js');
 
 app.get('/infomoney/fii', function(req,res){
-    scrapper_fii().then(
-            (value) => {
-                res.json(value);
-            }
-    ).catch(
-    function(error){
-        console.log(error);
-    });
+    if (data_fii.length != 0){
+        res.json(data_fii);
+    } else {
+
+        scrapper_fii().then(
+                (value) => {
+                    // res.json(value);
+                    data_fii = value;
+                }
+        ).catch(
+        function(error){
+            console.log(error);
+        });
+        res.json([{status: "300", message: "obtendo dados"}]);
+    }
 })
 
 app.get('/verifica', function(req, res) {
