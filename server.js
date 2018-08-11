@@ -82,8 +82,6 @@ var updateOrCreateDB = function(data, source){
     }
 }
 
-
-
 var updateFII = function(){
     fii_is_running = true;
     scrapper_fii().then(
@@ -214,7 +212,7 @@ app.get('/verifica2', function(req, res) {
 //     },8000);
 // };
 
-app.get('/envia', function(req, res) {
+app.get('/prices', function(req, res) {
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
     // var urls = [req.query.ticker];
     // // console.log(req.query.ticker);
@@ -232,10 +230,14 @@ app.get('/envia', function(req, res) {
     //     );
     // }
 
-    scrapper(req.query.ticker);
+    var tickerparam = req.query.ticker;
+    // scrapper(req.query.ticker);
+    models.Ativos.find({where: {ticker: tickerparam}}).then(function(todos) {
+        res.json(todos);
+    });
 
     // teste();
-    res.send("espera a resposta em /recebe");
+    // res.send("espera a resposta em /recebe");
     
 })
 
