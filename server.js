@@ -46,11 +46,10 @@ app.get('/raspagem', function(req, res) {
 app.get('/recebe', function(req, res) {
     // scrapper();
     // texto = "realizando";
-    if(texto == "acabou"){
+    if(data){
         res.json(data);
     } else {
-
-        res.send(texto);    
+        res.send('resultado ainda não encontrado');    
     }
 })
 
@@ -116,7 +115,7 @@ app.get('/envia', function(req, res) {
     scrapper(req.query.ticker);
 
     // teste();
-    res.send("acabou aqui");
+    res.send("espera a resposta em /recebe");
     
 })
 
