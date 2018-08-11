@@ -189,46 +189,15 @@ app.get('/verifica', function(req, res) {
     
 })
 
-app.get('/verifica2', function(req, res) {
-    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    // var entrada = {body:{ticker:'ITSA4'}};
-    // // ativos.create(req,res);
-    // models.Ativos.create({
-    //     sticker: 'ITSA4',
-    //     price: 12.01
-    //   }).then(function(user) {
-    //     res.send("abriu");
-    //   });
+app.get('/all', function(req, res) {
       models.Ativos.findAll({}).then(function(todos) {
         res.json(todos);
     });
-    // res.send("abriu");
 })
 
-// var teste = function() {
-//     setTimeout(function(){
-//          console.log('gets printed only once after 3 seconds')
-//          //logic
-//     },8000);
-// };
+
 
 app.get('/prices', function(req, res) {
-    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    // var urls = [req.query.ticker];
-    // // console.log(req.query.ticker);
-    // var total = urls.length;
-    // var data = [];
-    // for (var i = urls.length - 1; i >= 0; i--) {
-    //     scrape(urls[i]).then(
-    //         (value) => {
-    //             data.push(value[0]);
-    //             total = total - 1;
-    //             if(total == 0){
-    //                 res.json(data);
-    //             }
-    //         }
-    //     );
-    // }
 
     var tickerparam = (req.query.ticker).toUpperCase();;
     // scrapper(req.query.ticker);
@@ -239,10 +208,6 @@ app.get('/prices', function(req, res) {
             res.json([{status: 200, response: todos}]);
         }
     });
-
-    // teste();
-    // res.send("espera a resposta em /recebe");
-    
 })
 
 app.get('/', function(req, res) {
