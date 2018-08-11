@@ -14,6 +14,9 @@ var data = [];
 var data_fii = [];
 var data_acoes = [];
 
+var acoes_is_running = false;
+var fii_is_running = false;
+
 var scrapper = function(ticker){
     // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
     // var urls = ['ITSA4'];
@@ -69,16 +72,20 @@ app.get('/infomoney/acoes', function(req,res){
     if (data_acoes.length != 0){
         res.json(data_acoes);
     } else {
-
-        scrapper_acoes().then(
-                (value) => {
-                    // res.json(value);
-                    data_acoes = value;
-                }
-        ).catch(
-        function(error){
-            console.log(error);
-        });
+        if(!acoes_is_running){
+            acoes_is_running = true;
+            scrapper_acoes().then(
+                    (value) => {
+                        // res.json(value);
+                        data_acoes = value;
+                        acoes_is_running = false;
+                    }
+            ).catch(
+            function(error){
+                console.log(error);
+            });
+            
+        }
         res.json([{status: "300", message: "obtendo dados"}]);
     }
 })
@@ -89,16 +96,19 @@ app.get('/infomoney/fii', function(req,res){
     if (data_fii.length != 0){
         res.json(data_fii);
     } else {
-
-        scrapper_fii().then(
-                (value) => {
-                    // res.json(value);
-                    data_fii = value;
-                }
-        ).catch(
-        function(error){
-            console.log(error);
-        });
+        if (!fii_is_running){
+            fii_is_running = true;
+            scrapper_fii().then(
+                    (value) => {
+                        // res.json(value);
+                        data_fii = value;
+                        fii_is_running = false;
+                    }
+            ).catch(
+            function(error){
+                console.log(error);
+            });
+        }
         res.json([{status: "300", message: "obtendo dados"}]);
     }
 })
