@@ -1,7 +1,10 @@
 const puppeteer = require('puppeteer');
 
 module.exports = async (ticker) => {
-    const browser = await puppeteer.launch({headless: true});
+    // const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
     // const tickerName = ticker;
     await page.goto('https://br.tradingview.com/symbols/BMFBOVESPA-'+ticker+'/');
