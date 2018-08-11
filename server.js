@@ -95,16 +95,18 @@ var updateACOES = function(){
 
 
 var updateRegister = function(tickerparam, newprice){
-  models.Ativos.find({ where: { ticker: tickerparam } })
-  .on('success', function (project) {
-    // Check if record exists in db
-    if (project) {
-      project.updateAttributes({
-        price: newprice
-      })
-      .success(function () {})
-    }
-  })
+  models.Ativos.update(
+    { price: newprice },
+    { where: { ticker: tickerparam } }
+  )
+  .then(result =>
+    // handleResult(result)
+    console.log(result)
+  )
+  .catch(err =>
+    // handleError(err)
+    console.log(result)
+  );
 };
 
 var createRegister = function(tickerparam, priceparam, sourceparam){
@@ -158,9 +160,11 @@ app.get('/verifica', function(req, res) {
     var entrada = {body:{ticker:'ITSA4'}};
     // ativos.create(req,res);
     if (!thereIsRegister('ITSA4')){
+        console.log("criar");
         createRegister('ITSA4',11.00,'scrapper1');
     }else{
         updateRegister('ITSA4',12.00);
+        console.log("atualizar");
     }
     res.send("abriu");
     
