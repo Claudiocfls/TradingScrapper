@@ -43,7 +43,7 @@ app.get('/raspagem', function(req, res) {
     res.send("está realizando a busca");    
 })
 
-app.get('/verificando', function(req, res) {
+app.get('/recebe', function(req, res) {
     // scrapper();
     // texto = "realizando";
     if(texto == "acabou"){
