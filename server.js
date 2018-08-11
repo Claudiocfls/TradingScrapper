@@ -230,10 +230,14 @@ app.get('/prices', function(req, res) {
     //     );
     // }
 
-    var tickerparam = req.query.ticker;
+    var tickerparam = (req.query.ticker).toUpperCase();;
     // scrapper(req.query.ticker);
     models.Ativos.find({where: {ticker: tickerparam}}).then(function(todos) {
-        res.json(todos);
+        if(todos == null){
+            res.json([{status: 404}]);
+        }else{
+            res.json([{status: 200, response: todos}]);
+        }
     });
 
     // teste();
