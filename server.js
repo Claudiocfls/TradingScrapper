@@ -12,7 +12,6 @@ const scrapper_acoes = require('./scrappers/scrapper_acoes.js');
 const scrapper_fii = require('./scrappers/scrapper_fii.js');
 
 var texto = "";
-var data = [];
 
 var data_fii = [];
 var data_acoes = [];
@@ -20,17 +19,17 @@ var data_acoes = [];
 var acoes_is_running = false;
 var fii_is_running = false;
 
-var scrapper = function(ticker){
+var evaluateNewTicker = function(ticker){
+    var data = [];
     var urls = [ticker];
     var total = urls.length;
     for (var i = urls.length - 1; i >= 0; i--) {
         scrape(urls[i]).then(
             (value) => {
                 data.push(value[0]);
-                total = total - 1;
-                if(total == 0){
-                    // res.json(data);
-                    texto = "acabou";
+                if (data[0].status == 200){
+                    console.log("adicionando do trading view");
+                    updateOrCreateDBOne(data[0].ticker, "scrapper3", data[0].price);
                 }
             }
         ).catch(
@@ -117,7 +116,6 @@ var updateOrCreateDBOne = function(tickerparam, sourceparam, priceparam){
     models.Ativos.count({ where: { ticker: tickerparam } })
       .then(count => {
         if (count != 0) {
-            console.log(">>>>>>>>>>>>>>>>> " + count);
             updateRegister(tickerparam, priceparam);
         } else {
             createRegister(tickerparam, priceparam, sourceparam);
@@ -138,7 +136,8 @@ app.get('/prices', function(req, res) {
     // scrapper(req.query.ticker);
     models.Ativos.find({where: {ticker: tickerparam}}).then(function(todos) {
         if(todos == null){
-            res.json([{status: 404}]);
+            evaluateNewTicker(tickerparam);
+            res.json([{status: 404, response: {answer: "Tentaremos obter esse ativo para novas consultas"}}]);
         }else{
             res.json([{status: 200, response: todos}]);
         }

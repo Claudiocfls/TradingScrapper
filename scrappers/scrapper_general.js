@@ -19,9 +19,15 @@ module.exports = async (ticker) => {
         // for (var element of elements){ // Loop through each proudct
             let price = element.innerText; // Select the title
             let ticker = nome.innerText;
+
+            ticker = ticker.split(":")[1];
+            ticker = ticker.replace(/[\u200B-\u200D\uFEFF]/g, '');
             // let price = element.childNodes[7].children[0].innerText; // Select the price
             // let ticker2 = ticker.slice(0);
             let status = 200;
+            if (ticker == null || price == null){
+                status = 404;
+            }
             data.push({status, ticker, price}); // Push an object with the data onto our array
         // }
 
