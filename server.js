@@ -1,12 +1,15 @@
 const puppeteer = require('puppeteer');
-var models = require('./server/models/index.js');
-
-var express = require('express'),
-    app = express();
+var express = require('express');
 
 const PORT = process.env.PORT || 5000
 
+
+var app = express();
+
+var models = require('./server/models/index.js');
 var scrape = require('./scrappers/scrapper_general.js');
+const scrapper_acoes = require('./scrappers/scrapper_acoes.js');
+const scrapper_fii = require('./scrappers/scrapper_fii.js');
 
 var texto = "";
 var data = [];
@@ -38,33 +41,6 @@ var scrapper = function(ticker){
 };
 
 
-// Escolhendo no metodo .get() o caminho para fazer a requisição
-// Poderia ser somente a barra, mas para facilitar a compreensão vamos personalizar
-// app.get('/raspagem', function(req, res) {
-//     scrapper();
-//     texto = "realizando";
-//     res.send("está realizando a busca");    
-// })
-
-// app.get('/recebe', function(req, res) {
-//     // scrapper();
-//     // texto = "realizando";
-//     if(data.length != 0){
-//         res.json(data);
-//     } else {
-//         res.json([{'status': 300}]);    
-//     }
-// })
-
-// app.get('/apaga', function(req, res) {
-//     // scrapper();
-//     // texto = "realizando";
-//     data = [];
-//     res.redirect('/');
-// })
-
-const scrapper_acoes = require('./scrappers/scrapper_acoes.js');
-
 var ToFloat = function(value){
     var valor = value.replace(',','.');
     return parseFloat(valor);
@@ -74,42 +50,42 @@ var updateOrCreateDB = function(data, source){
     for (var i = data.length - 1; i >= 0; i--) {
         var nome = data[i].ticker;
         var valor = ToFloat(data[i].price);
-        if (!thereIsRegister(nome)){
-            createRegister(nome, valor, source );
-        } else {
-            updateRegister(nome, valor, source);
-        }
+        updateOrCreateDBOne(nome, source, valor);
     }
 }
 
 var updateFII = function(){
-    fii_is_running = true;
-    scrapper_fii().then(
-            (value) => {
-                // res.json(value);
-                data_fii = value;
-                fii_is_running = false;
-                updateOrCreateDB(data_fii, "scrapper2");
-            }
-    ).catch(
-    function(error){
-        console.log(error);
-    });
+    if (fii_is_running == false){
+        fii_is_running = true;
+        scrapper_fii().then(
+                (value) => {
+                    // res.json(value);
+                    data_fii = value;
+                    fii_is_running = false;
+                    updateOrCreateDB(data_fii, "scrapper2");
+                }
+        ).catch(
+        function(error){
+            console.log(error);
+        });
+    }
 };
 
 var updateACOES = function(){
-    acoes_is_running = true;
-    scrapper_acoes().then(
-            (value) => {
-                // res.json(value);
-                data_acoes = value;
-                acoes_is_running = false;
-                updateOrCreateDB(data_acoes, "scrapper1");
-            }
-    ).catch(
-    function(error){
-        console.log(error);
-    });           
+    if (acoes_is_running == false) {
+        acoes_is_running = true;
+        scrapper_acoes().then(
+                (value) => {
+                    // res.json(value);
+                    data_acoes = value;
+                    acoes_is_running = false;
+                    updateOrCreateDB(data_acoes, "scrapper1");
+                }
+        ).catch(
+        function(error){
+            console.log(error);
+        });           
+    }
 }
 
 var updateRegister = function(tickerparam, newprice){
@@ -137,65 +113,24 @@ var createRegister = function(tickerparam, priceparam, sourceparam){
       });
 };
 
-var thereIsRegister = function(ticker){
-    models.Ativos.count({ where: { ticker: ticker } })
+var updateOrCreateDBOne = function(tickerparam, sourceparam, priceparam){
+    models.Ativos.count({ where: { ticker: tickerparam } })
       .then(count => {
-        if (count == 0) {
-          console.log("ha "+count);
-          return false;
+        if (count != 0) {
+            console.log(">>>>>>>>>>>>>>>>> " + count);
+            updateRegister(tickerparam, priceparam);
+        } else {
+            createRegister(tickerparam, priceparam, sourceparam);
         }
-        return true;
     });
 };
 
-
-app.get('/infomoney/acoes', function(req,res){
-    if (data_acoes.length != 0){
-        res.json(data_acoes);
-    } else {
-        if(!acoes_is_running){
-            updateACOES();
-        }
-        res.json([{status: "300", message: "obtendo dados"}]);
-    }
-})
-
-
-const scrapper_fii = require('./scrappers/scrapper_fii.js');
-
-app.get('/infomoney/fii', function(req,res){
-    if (data_fii.length != 0){
-        res.json(data_fii);
-    } else {
-        if (!fii_is_running){
-            updateFII();
-        }
-        res.json([{status: "300", message: "obtendo dados"}]);
-    }
-})
-
-app.get('/verifica', function(req, res) {
-    // var urls = ['ITSA4','BOVA11','ABCP11','MGLU3','PETR3','SNSL3'];
-    var entrada = {body:{ticker:'MGLU3'}};
-    // ativos.create(req,res);
-    if (!thereIsRegister('MGLU3')){
-        console.log("criar");
-        createRegister('MGLU3',11.00,'scrapper1');
-    }else{
-        updateRegister('MGLU3',123.00);
-        console.log("atualizar");
-    }
-    res.send("abriu");
-    
-})
 
 app.get('/all', function(req, res) {
       models.Ativos.findAll({}).then(function(todos) {
         res.json(todos);
     });
 })
-
-
 
 app.get('/prices', function(req, res) {
 
@@ -214,10 +149,9 @@ app.get('/', function(req, res) {
     updateACOES();
     updateFII();
     // teste();
-    res.send("<h2> Info disponível :</h2> <p> /acoes </p><p> /fii </p><p></p>");
+    res.send("<h2> Info disponível :</h2> <p> /all </p><p> /prices/?ticker= </p><p></p>");
     
 })
-
 
 // Execução do serviço
 app.listen(PORT)

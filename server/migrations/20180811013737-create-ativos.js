@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       ticker: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       price: {
         type: Sequelize.FLOAT
